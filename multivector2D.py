@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 import math
 
@@ -113,11 +112,29 @@ class Multivector2D:
         if self.e12:
             components.append(f"{self.e12}e12")
         return " + ".join(components) if components else "0"
+
     
-a = Multivector2D(e1=1, e2=2)
-b = Multivector2D(e1=3, e2=4)
+def create_rotor(theta):
+    """
+    Create a rotor for rotating vectors in the e1-e2 plane by angle theta.
+    """
+    return Multivector2D(
+        scalar=math.cos(theta / 2),
+        e12=-math.sin(theta / 2)
+    )
+
+def rotate_vector(vector, theta):
+    """
+    Rotate a vector by angle theta using a rotor.
+    """
+    rotor = create_rotor(theta)
+    rotor_inv = rotor.inverse()
+    return rotor * vector * rotor_inv
+
+a = Multivector2D(e1=1)
+b = Multivector2D(e12=1, e1=2)
 
 print("Vector a:", a)
 print("Vector b:", b)
 
-print(a.magnitude())
+print(rotate_vector(a,math.pi/2))
