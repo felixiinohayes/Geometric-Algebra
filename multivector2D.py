@@ -41,6 +41,9 @@ class Multivector2D:
 
     def __rmul__(self, other):
         return self.__mul__(other)
+    
+    def __neg__(self):
+        return self * -1
 
     def geometric_product(self, other):
         # Unpack self components
@@ -114,10 +117,20 @@ class Multivector2D:
         return " + ".join(components) if components else "0"
 
     
-def create_rotor(theta):
+def create_rotor2D(theta):
     """
     Create a rotor for rotating vectors in the e1-e2 plane by angle theta.
     """
+    return Multivector2D(
+        scalar=math.cos(theta / 2),
+        e12=-math.sin(theta / 2)
+    )
+
+def create_rotorND(theta):
+    """
+    Create a rotor for rotating vectors in the e1-e2 plane by angle theta.
+    """
+    B = 
     return Multivector2D(
         scalar=math.cos(theta / 2),
         e12=-math.sin(theta / 2)
@@ -127,14 +140,20 @@ def rotate_vector(vector, theta):
     """
     Rotate a vector by angle theta using a rotor.
     """
-    rotor = create_rotor(theta)
+    rotor = create_rotor2D(theta)
     rotor_inv = rotor.inverse()
     return rotor * vector * rotor_inv
 
+def reflect_vector(vector, normal):
+    """
+    Reflect a vector in the hyperplane perpendicular to the normal vector
+    """
+    return -normal * vector * normal
+
 a = Multivector2D(e1=1)
-b = Multivector2D(e12=1, e1=2)
+b = Multivector2D(e1=1)
 
 print("Vector a:", a)
 print("Vector b:", b)
 
-print(rotate_vector(a,math.pi/2))
+print(reflect_vector(a,b))
