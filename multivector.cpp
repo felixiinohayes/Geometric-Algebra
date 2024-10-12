@@ -1,13 +1,13 @@
 #include"multivector.h"
 
-Multivector Multivector::operator+(const Multivector& other) {
-    return Multivector(scalar + other.scalar, e1 + other.e1, e2 + other.e2, e12 + other.e12);
+MultiVector MultiVector::operator+(const MultiVector& other) {
+    return MultiVector(scalar + other.scalar, e1 + other.e1, e2 + other.e2, e12 + other.e12);
 }
-Multivector Multivector::operator-(const Multivector& other) {
-    return Multivector(scalar - other.scalar, e1 - other.e1, e2 - other.e2, e12 - other.e12);
+MultiVector MultiVector::operator-(const MultiVector& other) {
+    return MultiVector(scalar - other.scalar, e1 - other.e1, e2 - other.e2, e12 - other.e12);
 }
-Multivector Multivector::operator*(const Multivector& other) {
-    Multivector output;
+MultiVector MultiVector::operator*(const MultiVector& other) {
+    MultiVector output;
     output.scalar = scalar * other.scalar + e1 * other.e1 + e2 * other.e2 - e12 * other.e12;
     output.e1 = scalar * other.e1 + e1 * other.scalar + e2 * other.e12 - e12 * other.e2;
     output.e2 = scalar * other.e2 + e2 * other.scalar + e12 * other.e1 - e1 * other.e12;
@@ -15,7 +15,26 @@ Multivector Multivector::operator*(const Multivector& other) {
     return output;
 }
 
-void Multivector::display() {
+MultiVector MultiVector::operator*(const double& other_scalar) {
+    return MultiVector(scalar * other_scalar, e1 * other_scalar, e2 * other_scalar, e12 * other_scalar);
+}
+
+MultiVector MultiVector::inverse() {
+    MultiVector reversed_self(*this);
+    double denominator =  (*this * reversed_self).scalar;
+    if (denominator==0) throw std::runtime_error("Cannot invert a MultiVector with zero magnitude");
+    return reversed_self * (1 / denominator);
+}
+
+MultiVector MultiVector::rotate(const double& theta) {
+    MultiVector rotor;
+    rotor.scalar = std::cos(theta/2);
+    rotor.e12 = std::sin(theta/2);
+    MultiVector rotated_vector = rotor * (*this) * rotor.inverse(); 
+    return rotated_vector;
+} 
+
+void MultiVector::display() {
     bool first = true;
     if (scalar != 0.0) {
         std::cout << scalar;
@@ -41,12 +60,9 @@ void Multivector::display() {
 
 int main()
 {
-    Multivector a;
-    Multivector b;
+    MultiVector a;
     a.e1 = 1.0;
-    b.e2 = 1.0;
-    Multivector c = a * b;
-
+    MultiVector c = a.rotate(2);
     c.display();
 
 }
