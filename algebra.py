@@ -1,4 +1,4 @@
-
+import multivector as mv
 
 class Algebra:
     def __init__(self, dim=3):
@@ -8,6 +8,7 @@ class Algebra:
         self.gtable = self.create_table(self.gp_basis_blade)
         self.otable = self.create_table(self.op_basis_blade)
         self.itable = self.create_table(self.ip_basis_blade)
+        self.basis_labels = ['1', 'e1', 'e2', 'e12', 'e3', 'e13', 'e23', 'e123']
     
     def create_table(self, func):
         table = {}
@@ -46,7 +47,7 @@ class Algebra:
             a = a >> 1
         return (1 if ((total & 1) == 0) else -1)
 
-    def gp_op(self, a, b, outer):
+    def product_from_table(self, a, b, product_type):
         output_components = [0] * self.n_blades
 
         for a_idx, a_comp in enumerate(a):
@@ -55,10 +56,12 @@ class Algebra:
                 if b_comp == 0: continue
 
                 # Lookup multiplication result in table
-                if outer:
+                if product_type == "o":
                     blade, sign = self.otable[(a_idx, b_idx)]
-                else:
+                elif product_type == "g":
                     blade, sign = self.gtable[(a_idx, b_idx)]
+                elif product_type == "i":
+                    blade, sign = self.itable[(a_idx, b_idx)]
 
                 # Add the contribution to that component
                 output_components[blade] += a_comp * b_comp * sign

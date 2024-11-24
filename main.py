@@ -1,11 +1,6 @@
-import multivector as mv
-import algebra
+from g3 import *
 
-alg = algebra.Algebra(dim=2)
+x = 2 + e1
+y = 2.1*e1 + e12
 
-a = mv.MultiVector(alg, [0,1,0,0])
-b = mv.MultiVector(alg, [0,0,1,0])
-
-print(a*b)
-print(a^b)
-print(a)
+print(x*y)
