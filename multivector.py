@@ -14,4 +14,5 @@ class MultiVector:
     def __mul__(self, other):
         result_components = self.alg.gp(self.components, other.components)
         return MultiVector(self.alg, result_components)
+
     

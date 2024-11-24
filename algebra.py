@@ -29,15 +29,16 @@ class Algebra:
         return (1 if ((total & 1) == 0) else -1)
 
     def gp(self, a, b):
-        output_components = [0] * (2 ** self.dim)
+        output_components = [0] * self.n_blades
 
-        # Perform element-wise multiplication
         for a_idx, a_comp in enumerate(a):
             if a_comp == 0: continue
             for b_idx, b_comp in enumerate(b):
                 if b_comp == 0: continue
 
-                blade, sign = self.gp_basis_blade(a_idx, b_idx)
+                # Lookup multiplication result in table
+                blade, sign = self.gtable[(a_idx, b_idx)]
 
+                # Add the contribution to that component
                 output_components[blade] += a_comp * b_comp * sign
         return output_components
