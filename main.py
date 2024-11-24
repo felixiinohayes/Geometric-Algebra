@@ -1,6 +1,9 @@
 from g3 import *
+import visualiser
 
-x = 2 + e1
-y = 2.1*e1 + e12
+a = 5*e1 + 2*e2
+b = 2*e3 + 4*e2
 
-print(x*y)
+visualiser.add([a, b])
+
+visualiser.show()
