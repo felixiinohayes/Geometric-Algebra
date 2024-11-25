@@ -1,14 +1,16 @@
 import multivector as mv
 
 class Algebra:
-    def __init__(self, dim=3):
-        self.dim = dim
+    def __init__(self, signature):
+        self.signature = signature
+        self.dim = len(signature)
         self.n_blades = 2 ** self.dim
         self.blades = list(range(self.n_blades))
+
         self.gtable = self.create_table(self.gp_basis_blade)
         self.otable = self.create_table(self.op_basis_blade)
         self.itable = self.create_table(self.ip_basis_blade)
-        self.basis_labels = ['1', 'e1', 'e2', 'e12', 'e3', 'e13', 'e23', 'e123']
+        self.basis_labels = self.create_basis_labels()
     
     def create_table(self, func):
         table = {}
@@ -17,6 +19,16 @@ class Algebra:
                 bm_result, sign = func(i, j)
                 table[(i, j)] = (bm_result, sign)
         return table
+    
+    def create_basis_labels(self):
+        labels = []
+        for i in range(1, self.n_blades):
+            label = ["e"]
+            for bit in range(self.dim):
+                if i & (1 << bit):
+                    label.append(str(bit))
+            labels.append(''.join(label))
+        return labels
 
     def gp_basis_blade(self, a, b):
         bitmap = a ^ b
